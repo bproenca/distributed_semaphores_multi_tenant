@@ -1,12 +1,9 @@
 package br.com.bcp;
 
-import java.io.IOException;
-import java.util.Map;
-import java.util.concurrent.TimeoutException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -21,37 +18,41 @@ public class Controller {
     @Autowired
     private Admin admin;
 
-    private static int count = 1;
-
     @PostMapping("/consume")
-    public String consume() throws InterruptedException, IOException, TimeoutException {
-        for (int i = 0; i < 100; i++) {
-            for (String queue : Config.myQueues.keySet()) {
-                String rsQueue = "rs_" + queue;
-                consumer.lockAndConsume(rsQueue);
-            }
+    public String consume(
+        @RequestParam(value = "threads", defaultValue = "2") Integer threads,
+        @RequestParam(value = "iterations", defaultValue = "30") Integer iterations)  
+    {
+        for (int i = 0; i < threads; i++) {
+            consumer.startConsume(iterations);
         }
-        return "Iterate 100 times consuming resources";
+        return "started consuming";
     }
 
     @PostMapping("/produce")
-    public Map<String, Integer> produce() {
-        Config.myQueues.forEach((queue, value) -> {
-			for (int i = 0; i < value; i++) {
-				producer.produce(queue, "Message number: " + count++);
-			}
-		});
-		return Config.myQueues;
+    public String produce() {
+        int cnt = 1;
+        for (Tenant t : Tenant.values()) {
+            for (int i = 0; i < t.getCount(); i++) {
+                producer.produce(t.getQueue(), "Message number: " + cnt++);
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return "produce ok";
     }
 
 	@PostMapping("/config")
     public String config() {
-        for (String queue : Config.myQueues.keySet()) {
-            String rsQueue = "rs_" + queue;
-            admin.purge(rsQueue);
-        	producer.produce(rsQueue, queue);
-		}
-		return "done";
+
+        for (Tenant t : Tenant.values()) {
+            admin.purge(t.getResource());
+        	producer.produce(t.getResource(), t.getQueue());
+        }
+		return "config ok";
     }
 
     @GetMapping("/ping")

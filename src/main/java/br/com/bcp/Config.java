@@ -1,7 +1,5 @@
 package br.com.bcp;
 
-import java.util.Map;
-
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
@@ -12,13 +10,6 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class Config {
-    
-    public static Map<String, Integer> myQueues = Map.of(
-		"customer_a", 3,
-		"customer_b", 5,
-		"customer_c", 8,
-      "customer_d", 13
-	);
 
     @Bean
     public ConnectionFactory connectionFactory() {
