@@ -21,7 +21,7 @@ public class Controller {
     @PostMapping("/consume")
     public String consume(
         @RequestParam(value = "threads", defaultValue = "2") Integer threads,
-        @RequestParam(value = "iterations", defaultValue = "30") Integer iterations)  
+        @RequestParam(value = "iterations", defaultValue = "100") Integer iterations)  
     {
         for (int i = 0; i < threads; i++) {
             consumer.startConsume(iterations);
@@ -33,8 +33,8 @@ public class Controller {
     public String produce() {
         int cnt = 1;
         for (Tenant t : Tenant.values()) {
-            for (int i = 0; i < t.getCount(); i++) {
-                producer.produce(t.getQueue(), "Message number: " + cnt++);
+            for (int i = 0; i < t.getNumberOfMessages(); i++) {
+                producer.produce(t.getQueueName(), "Message number: " + cnt++);
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
@@ -49,8 +49,8 @@ public class Controller {
     public String config() {
 
         for (Tenant t : Tenant.values()) {
-            admin.purge(t.getResource());
-        	producer.produce(t.getResource(), t.getQueue());
+            admin.purge(t.getResourceLock());
+        	producer.produce(t.getResourceLock(), t.getQueueName());
         }
 		return "config ok";
     }

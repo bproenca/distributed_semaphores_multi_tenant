@@ -29,17 +29,17 @@ public class Consumer {
         for (int i = 0; i < iterations; i++) {
             for (Tenant t : Tenant.values()) {
                 try {
-                    logger.info("Trying lock resource {} (iteration {})", t.getResource().toUpperCase(), i);
-                    lockAndConsume(t.getResource());
+                    logger.info("Trying lock resource {} (iteration {})", t.getResourceLock().toUpperCase(), i);
+                    lockAndConsume(t.getResourceLock());
                 } catch (InterruptedException | IOException | TimeoutException e) {
                     logger.error("Something went wrong", e);
                 }
             }
-            //sleep(1000);
+            sleep(1000);
         }
     }
 
-    public void lockAndConsume(String resource) throws InterruptedException, IOException, TimeoutException {
+    private void lockAndConsume(String resource) throws InterruptedException, IOException, TimeoutException {
         Connection connection = factory.createConnection();
         Channel channel = connection.createChannel(false);
 
@@ -68,6 +68,7 @@ public class Consumer {
             String message = new String(response.getBody(), "UTF-8");
             int sleepTime = new Random().nextInt(9000) + 1;
             logger.info("Consumed from queue: {} message: {} ({} seconds)", queue.toUpperCase(), message, sleepTime);
+            logger.warn("Consumed from queue: {} message: {} ({} seconds)", queue.toUpperCase(), message, sleepTime);
             sleep(sleepTime);
             channel.basicAck(response.getEnvelope().getDeliveryTag(), false);
         } else {

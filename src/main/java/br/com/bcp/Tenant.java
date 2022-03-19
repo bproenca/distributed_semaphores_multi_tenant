@@ -1,31 +1,34 @@
 package br.com.bcp;
 
+/**
+ * Only used to input some basic config data for tests.
+ */
 public enum Tenant {
-    A ("customer_a", "rs_customer_a", 3),
-    B ("customer_b", "rs_customer_b", 5),
-    C ("customer_c", "rs_customer_c", 8),
-    D ("customer_d", "rs_customer_d", 13);
+    A ("tenant_a", "resource_lock_tenant_a", 3),
+    B ("tenant_b", "resource_lock_tenant_b", 5),
+    C ("tenant_c", "resource_lock_tenant_c", 8),
+    D ("tenant_d", "resource_lock_tenant_d", 13);
 
-    private final String queue;
-    private final String resource;
-    private final Integer count;
+    private final String queueName;
+    private final String resourceLock;
+    private final Integer numberOfMessages;
 
-    private Tenant(String queue, String resource, Integer count) {
-        this.queue = queue;
-        this.resource = resource;
-        this.count = count;
+    private Tenant(String queueName, String resourceLock, Integer numberOfMessages) {
+        this.queueName = queueName;
+        this.resourceLock = resourceLock;
+        this.numberOfMessages = numberOfMessages;
     }
 
-    public String getQueue() {
-        return queue;
+    public String getQueueName() {
+        return queueName;
     }
 
-    public String getResource() {
-        return resource;
+    public String getResourceLock() {
+        return resourceLock;
     }
 
-    public Integer getCount() {
-        return count;
+    public Integer getNumberOfMessages() {
+        return numberOfMessages;
     }
 
     

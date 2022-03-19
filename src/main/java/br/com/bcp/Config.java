@@ -29,42 +29,42 @@ public class Config {
     }
 
     @Bean
-    public Queue customer_a() {
-       return new Queue("customer_a");
+    public Queue tenant_a() {
+       return new Queue("tenant_a");
     }
 
     @Bean
-    public Queue customer_b() {
-       return new Queue("customer_b");
+    public Queue tenant_b() {
+       return new Queue("tenant_b");
     }
 
     @Bean
-    public Queue customer_c() {
-       return new Queue("customer_c");
+    public Queue tenant_c() {
+       return new Queue("tenant_c");
     }
 
     @Bean
-    public Queue customer_d() {
-       return new Queue("customer_d");
+    public Queue tenant_d() {
+       return new Queue("tenant_d");
     }
 
     @Bean
-    public Queue rs_customer_a() {
-       return new Queue("rs_customer_a");
+    public Queue resource_lock_tenant_a() {
+       return new Queue("resource_lock_tenant_a");
     }
 
     @Bean
-    public Queue rs_customer_b() {
-       return new Queue("rs_customer_b");
+    public Queue resource_lock_tenant_b() {
+       return new Queue("resource_lock_tenant_b");
     }
 
     @Bean
-    public Queue rs_customer_c() {
-       return new Queue("rs_customer_c");
+    public Queue resource_lock_tenant_c() {
+       return new Queue("resource_lock_tenant_c");
     }
 
     @Bean
-    public Queue rs_customer_d() {
-       return new Queue("rs_customer_d");
+    public Queue resource_lock_tenant_d() {
+       return new Queue("resource_lock_tenant_d");
     }
 }
