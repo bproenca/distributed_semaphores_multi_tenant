@@ -22,7 +22,6 @@ public class Consumer {
     @Autowired
     private ConnectionFactory factory;
 
-
     @Async
     public void startConsume(Integer iterations) {
         logger.info("This thread will iterate {} times, each iteration consumes 1 message of each tenant", iterations);
@@ -35,7 +34,7 @@ public class Consumer {
                     logger.error("Something went wrong", e);
                 }
             }
-            sleep(1000);
+            sleep(2000);
         }
     }
 
@@ -66,15 +65,13 @@ public class Consumer {
         GetResponse response = channel.basicGet(queue, false);
         if (response != null) {
             String message = new String(response.getBody(), "UTF-8");
-            int sleepTime = new Random().nextInt(9000) + 1;
-            logger.info("Consumed from queue: {} message: {} ({} seconds)", queue.toUpperCase(), message, sleepTime);
-            logger.warn("Consumed from queue: {} message: {} ({} seconds)", queue.toUpperCase(), message, sleepTime);
+            int sleepTime = new Random().nextInt(5000) + 4000;
             sleep(sleepTime);
             channel.basicAck(response.getEnvelope().getDeliveryTag(), false);
+            logger.warn("Consumed from queue: {} message: {} ({} seconds)", queue.toUpperCase(), message, sleepTime);
         } else {
             logger.info("No job to be done for queue {}", queue.toUpperCase());
         }
-        
         channel.close();
         connection.close();
     }

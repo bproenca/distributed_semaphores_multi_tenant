@@ -11,12 +11,23 @@ The trick will be that these processes will never acknowledge the message, but t
 
 https://blog.rabbitmq.com/posts/2014/02/distributed-semaphores-with-rabbitmq/
 
+### Start RabbitMQ
+
+```sh
+docker run -d --hostname bcp-my-rabbit --name bcp-some-rabbit \
+ -p 5672:5672 -p 15672:15672 \
+ -v /home/bcp/wks/volumes/rabbitmq:/var/lib/rabbitmq \
+ rabbitmq:3-management
+```
+
 ### Test
 
-```
+```sh
+./mvnw spring-boot:run -Dspring-boot.run.arguments="--server.port=8080"
+
 curl -X POST http://localhost:8080/config
 curl -X POST http://localhost:8080/produce
-curl -X POST http://localhost:8080/consume?threads=5
+curl -X POST "http://localhost:8080/consume?threads=2&iterations=20"
 ```
 
 *or use th `.sh` scripts*
