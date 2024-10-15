@@ -1,7 +1,9 @@
 # Intro
 
 We first declare a queue called `resource_lock_tenant_<tenant>` for each tenant (a, b, c, d). 
-This queue is just used to control (semaphore) access to the tenant, and exactly one message is published to each `resource_lock_tenant_<tenant>` queue.
+This queue is just used to control (semaphore) access to the tenant, and exactly one* message is published to each `resource_lock_tenant_<tenant>` queue.
+
+_PS*: you can add more messages if you want to implement **backpressure** instead of **fifo** (in this example we have diff number of msgs per tenant)._
 
 The first thread/process to arrive will get the message and all the others will sit idle waiting for it (or try to get messages from other tenants). 
 
